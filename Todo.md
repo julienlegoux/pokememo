@@ -64,11 +64,11 @@
 
 ---
 
-## Phase 2: Core Services Layer 🔄
+## Phase 2: Core Services Layer 🔄 ✅ COMPLETED
 
 ### Services (`src/services/` folder)
 
-- [ ] **Task 6**: Create `pokemon.service.ts`
+- [x] **Task 6**: Create `pokemon.service.ts`
   - **Description**: Service to fetch Pokemon data with theme filtering
   - **Acceptance Criteria**:
     - Uses `pokeapi-js-wrapper` to fetch Pokemon
@@ -76,16 +76,18 @@
     - Returns Pokemon ID, name, sprite URL (front-default)
     - Implements caching to avoid redundant API calls
   - **Dependencies**: None
+  - **✅ Completed**: Supports Gen 1-3, includes preload and multi-gen methods
 
-- [ ] **Task 7**: Implement Pokemon caching strategy
+- [x] **Task 7**: Implement Pokemon caching strategy
   - **Description**: Cache fetched Pokemon data to reduce API calls
   - **Acceptance Criteria**:
     - In-memory cache for Pokemon data during session
     - Cache by theme key (e.g., "gen1-fire")
     - Reduces API calls by at least 80% in typical gameplay
   - **Dependencies**: Task 6
+  - **✅ Completed**: In-memory Map with 1-hour TTL, cache statistics
 
-- [ ] **Task 8**: Create `leaderboard.service.ts`
+- [x] **Task 8**: Create `leaderboard.service.ts`
   - **Description**: Client service to interact with leaderboard APIs
   - **Acceptance Criteria**:
     - `getLeaderboard()` - Fetches top 10 scores
@@ -93,8 +95,9 @@
     - Handles network errors gracefully
     - Returns typed responses matching API contracts
   - **Dependencies**: Task 5
+  - **✅ Completed**: Includes checkConnection() for offline detection
 
-- [ ] **Task 9**: Create `storage.service.ts`
+- [x] **Task 9**: Create `storage.service.ts`
   - **Description**: Manage player persistence in LocalStorage
   - **Acceptance Criteria**:
     - Generate UUID for new players using `uuid` library
@@ -102,13 +105,19 @@
     - Methods: `getPlayerId()`, `getPlayerName()`, `setPlayerName()`
     - Handle LocalStorage quota errors
   - **Dependencies**: None
+  - **✅ Completed**: Full localStorage + Redis sync via API, updatePlayerStats()
 
-- [ ] **Task 10**: Add service type definitions
+- [x] **Task 10**: Add service type definitions
   - **Description**: Types for service layer data structures
   - **Acceptance Criteria**:
     - Add to `src/lib/type.ts`: `Pokemon`, `PokemonTheme`, `CacheEntry`
     - Types ensure type safety across service layer
   - **Dependencies**: None
+  - **✅ Completed**: Plus PlayerProfile, PlayerPreferences, TopScore types
+
+### Bonus Tasks Completed:
+- [x] **Task 6B**: Created `/api/player/[playerId].ts` - GET/PUT endpoint for player profiles
+- [x] **Task 10B**: Added comprehensive player profile type system
 
 ---
 

@@ -1,6 +1,6 @@
 import { Redis } from '@upstash/redis';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import type { LeaderboardEntry, LeaderboardResponse } from '../src/lib/type';
+import type { LeaderboardEntry } from '../src/lib/type';
 
 // Initialize Redis client
 const redis = new Redis({
