@@ -1,0 +1,150 @@
+/**
+ * Player Setup Styles
+ * Form inputs and actions for player configuration
+ */
+
+/* ============================================
+   PLAYER INPUTS
+   ============================================ */
+
+.player-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.player-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.player-input__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.player-input__group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.player-input__field {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.player-input__field:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.player-input__field:invalid {
+    border-color: #ff6b6b;
+}
+
+.player-input__remove {
+    width: 44px;
+    height: 44px;
+    border: 2px solid #ff6b6b;
+    border-radius: 8px;
+    background: white;
+    color: #ff6b6b;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-input__remove:hover {
+    background: #ff6b6b;
+    color: white;
+}
+
+/* ============================================
+   ACTIONS
+   ============================================ */
+
+.player-setup__actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 2px solid #e0e0e0;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+.btn--primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn--primary:active {
+    transform: translateY(0);
+}
+
+.btn--secondary {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.btn--secondary:hover {
+    background: #f5f7fa;
+}
+
+.player-setup__add {
+    margin-right: auto;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 767px) {
+    .player-setup__actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .player-setup__add {
+        margin-right: 0;
+    }
+}

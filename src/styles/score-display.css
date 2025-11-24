@@ -1,0 +1,129 @@
+/**
+ * Score Display Styles
+ * Player cards with active highlight
+ */
+
+.score-display {
+    width: 100%;
+}
+
+.score-display__container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* ============================================
+   PLAYER CARD
+   ============================================ */
+
+.player-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 12px;
+    padding: 1rem;
+    min-width: 200px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.player-card--active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.player-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.player-card--active .player-card__header {
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+.player-card__name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.player-card__badge {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* ============================================
+   STATS
+   ============================================ */
+
+.player-card__stats {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.player-card__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.player-card__stat-label {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.player-card__stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.player-card__stat-value--primary {
+    color: #667eea;
+}
+
+.player-card--active .player-card__stat-value--primary {
+    color: #ffd700;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 767px) {
+    .score-display__container {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .player-card {
+        min-width: 100%;
+        padding: 0.75rem;
+    }
+
+    .player-card__name {
+        font-size: 1rem;
+    }
+
+    .player-card__stat-value {
+        font-size: 1.25rem;
+    }
+}

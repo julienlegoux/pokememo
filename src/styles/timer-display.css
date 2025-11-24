@@ -1,0 +1,71 @@
+/**
+ * Timer Display Styles
+ * Countdown timer with warning state
+ */
+
+.timer-display {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.timer-display__container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.timer-display__icon {
+    width: 24px;
+    height: 24px;
+}
+
+.timer-display__time {
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+}
+
+/* ============================================
+   WARNING STATE (< 10 seconds)
+   ============================================ */
+
+.timer-display--warning {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    animation: timerPulse 1s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 767px) {
+    .timer-display {
+        padding: 0.5rem 1rem;
+    }
+
+    .timer-display__time {
+        font-size: 1.25rem;
+    }
+
+    .timer-display__icon {
+        width: 20px;
+        height: 20px;
+    }
+}

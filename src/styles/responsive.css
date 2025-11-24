@@ -1,0 +1,343 @@
+/**
+ * Responsive Layout Styles
+ * Global responsive rules and utilities
+ * Component-specific responsive styles remain in component files
+ */
+
+/* ============================================
+   APP CONTAINER LAYOUT
+   ============================================ */
+
+.app {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-primary);
+    transition: background-color var(--transition-normal);
+}
+
+.app__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 2px solid var(--color-border);
+    background: var(--color-bg-secondary);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.app__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.app__footer {
+    padding: 1rem;
+    text-align: center;
+    border-top: 2px solid var(--color-border);
+    background: var(--color-bg-secondary);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+/* ============================================
+   GAME LAYOUT CONTAINER
+   ============================================ */
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.game-container__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.game-container__controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.game-container__board {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.game-container__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ============================================
+   MOBILE (320px - 767px)
+   ============================================ */
+
+@media (max-width: 767px) {
+    .app__header {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .app__main {
+        padding: 0.75rem;
+    }
+
+    .app__footer {
+        padding: 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    .game-container {
+        gap: 1rem;
+    }
+
+    .game-container__header {
+        gap: 0.75rem;
+    }
+
+    .game-container__controls {
+        gap: 0.75rem;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* Stack score display vertically on mobile */
+    .game-container__sidebar {
+        order: -1; /* Move scores above board */
+        gap: 0.75rem;
+    }
+}
+
+/* ============================================
+   TABLET (768px - 1023px)
+   ============================================ */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .app__header {
+        padding: 1.5rem 2rem;
+    }
+
+    .app__main {
+        padding: 1.5rem 2rem;
+    }
+
+    .app__footer {
+        padding: 1.5rem 2rem;
+    }
+
+    .game-container {
+        max-width: 900px;
+        gap: 2rem;
+    }
+
+    .game-container__controls {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+/* ============================================
+   DESKTOP (1024px+)
+   ============================================ */
+
+@media (min-width: 1024px) {
+    .app {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .app__header {
+        padding: 2rem 3rem;
+    }
+
+    .app__main {
+        padding: 2rem 3rem;
+    }
+
+    .app__footer {
+        padding: 2rem 3rem;
+    }
+
+    .game-container {
+        max-width: 1200px;
+        gap: 2.5rem;
+    }
+
+    /* Desktop: Side-by-side layout */
+    .game-container--with-sidebar {
+        flex-direction: row;
+    }
+
+    .game-container--with-sidebar .game-container__board {
+        flex: 1;
+    }
+
+    .game-container--with-sidebar .game-container__sidebar {
+        width: 300px;
+        position: sticky;
+        top: 100px;
+        align-self: flex-start;
+    }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Visibility Utilities */
+.hide-mobile {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .hide-mobile {
+        display: initial;
+    }
+
+    .hide-tablet-up {
+        display: none;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hide-desktop {
+        display: none;
+    }
+}
+
+/* Spacing Utilities */
+.spacing-mobile {
+    padding: 0.5rem;
+}
+
+.spacing-tablet {
+    padding: 1rem;
+}
+
+.spacing-desktop {
+    padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .spacing-mobile {
+        padding: 1rem;
+    }
+
+    .spacing-tablet {
+        padding: 1.5rem;
+    }
+
+    .spacing-desktop {
+        padding: 2rem;
+    }
+}
+
+/* ============================================
+   TOUCH TARGET ENFORCEMENT
+   ============================================ */
+
+/* Ensure all interactive elements meet 44x44px minimum */
+button,
+a,
+input[type="checkbox"],
+input[type="radio"],
+select,
+.clickable {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Exception for text inputs and textareas */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    min-width: auto;
+    min-height: 44px;
+}
+
+/* ============================================
+   SAFE AREA INSETS (MOBILE NOTCH SUPPORT)
+   ============================================ */
+
+@supports (padding: env(safe-area-inset-top)) {
+    .app__header {
+        padding-top: max(1rem, env(safe-area-inset-top));
+    }
+
+    .app__footer {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .app__main {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
+}
+
+/* ============================================
+   LANDSCAPE MOBILE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 767px) and (orientation: landscape) {
+    .app__header {
+        position: relative; /* Don't stick in landscape */
+        padding: 0.5rem 1rem;
+    }
+
+    .game-container {
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .game-container__board {
+        flex: 1;
+    }
+
+    .game-container__sidebar {
+        width: 200px;
+        order: 1;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    .app__header,
+    .app__footer,
+    .game-container__controls {
+        display: none;
+    }
+
+    .app {
+        min-height: auto;
+    }
+
+    .game-board {
+        break-inside: avoid;
+    }
+}

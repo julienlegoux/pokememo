@@ -1,0 +1,72 @@
+/**
+ * Theme Selector Styles
+ * Pokemon generation dropdown
+ */
+
+.theme-selector {
+    display: inline-block;
+}
+
+.theme-selector__container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.theme-selector__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.theme-selector__select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 280px;
+}
+
+.theme-selector__select:hover {
+    border-color: #667eea;
+}
+
+.theme-selector__select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] .theme-selector__label {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .theme-selector__select {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #444;
+}
+
+[data-theme="dark"] .theme-selector__select:hover {
+    border-color: #667eea;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 767px) {
+    .theme-selector__select {
+        min-width: 100%;
+        font-size: 0.875rem;
+    }
+}

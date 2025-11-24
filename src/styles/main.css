@@ -1,0 +1,45 @@
+/**
+ * Main Stylesheet
+ * Central import file for all CSS modules
+ *
+ * Import order:
+ * 1. Base & Variables
+ * 2. Global Layouts & Responsive
+ * 3. Component Styles (alphabetical)
+ * 4. Animation Effects
+ *
+ * Usage in main.ts:
+ *   import './styles/main.css';
+ */
+
+/* ============================================
+   1. BASE & VARIABLES
+   ============================================ */
+
+@import './base.css';
+
+/* ============================================
+   2. GLOBAL LAYOUTS & RESPONSIVE
+   ============================================ */
+
+@import './responsive.css';
+
+/* ============================================
+   3. COMPONENT STYLES (ALPHABETICAL)
+   ============================================ */
+
+@import './card-animations.css';
+@import './dark-mode-toggle.css';
+@import './game-board.css';
+@import './leaderboard-view.css';
+@import './modal.css';
+@import './player-setup.css';
+@import './score-display.css';
+@import './theme-selector.css';
+@import './timer-display.css';
+
+/* ============================================
+   4. ANIMATION EFFECTS
+   ============================================ */
+
+@import './match-animations.css';

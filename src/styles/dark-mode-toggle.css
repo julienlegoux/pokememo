@@ -1,0 +1,61 @@
+/**
+ * Dark Mode Toggle Styles
+ * Theme switcher button
+ */
+
+.dark-mode-toggle {
+    display: inline-block;
+}
+
+.dark-mode-toggle__button {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.dark-mode-toggle__button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.dark-mode-toggle__button:active {
+    transform: scale(0.95);
+}
+
+.dark-mode-toggle__icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* ============================================
+   DARK MODE STYLES
+   ============================================ */
+
+[data-theme="dark"] .dark-mode-toggle__button {
+    background: linear-gradient(135deg, #ffa94d 0%, #fd7e14 100%);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 767px) {
+    .dark-mode-toggle__button {
+        width: 40px;
+        height: 40px;
+    }
+
+    .dark-mode-toggle__icon {
+        width: 20px;
+        height: 20px;
+    }
+}

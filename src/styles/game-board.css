@@ -1,0 +1,87 @@
+/**
+ * Game Board Grid Styles
+ * Responsive CSS Grid layouts for different difficulties
+ */
+
+.game-board {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 100%;
+    margin: 0 auto;
+    place-items: center;
+}
+
+/* ============================================
+   DIFFICULTY GRIDS
+   ============================================ */
+
+/* Easy: 4x2 grid (8 cards) */
+.game-board--easy {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    max-width: 480px;
+}
+
+/* Medium: 4x4 grid (16 cards) */
+.game-board--medium {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    max-width: 640px;
+}
+
+/* Hard: 6x4 grid (24 cards) */
+.game-board--hard {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    max-width: 960px;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+/* Mobile: Stack fewer columns */
+@media (max-width: 767px) {
+    .game-board {
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .game-board--easy {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 100%;
+    }
+
+    .game-board--medium {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 100%;
+    }
+
+    .game-board--hard {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+        max-width: 100%;
+    }
+}
+
+/* Tablet: Adjust spacing */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .game-board {
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .game-board--hard {
+        grid-template-columns: repeat(6, 1fr);
+        max-width: 720px;
+    }
+}
+
+/* Desktop: Full layout */
+@media (min-width: 1024px) {
+    .game-board {
+        gap: 1.25rem;
+        padding: 1.25rem;
+    }
+}

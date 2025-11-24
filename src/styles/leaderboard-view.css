@@ -1,0 +1,278 @@
+/**
+ * Leaderboard View Styles
+ * Top 10 scores display with skeleton loading
+ */
+
+.leaderboard-view {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.leaderboard__container {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+    color: #333;
+}
+
+/* ============================================
+   LEADERBOARD LIST
+   ============================================ */
+
+.leaderboard__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.leaderboard__row {
+    display: grid;
+    grid-template-columns: 60px 1fr 100px 100px;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.leaderboard__row:hover {
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   RANK
+   ============================================ */
+
+.leaderboard__rank {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: #666;
+}
+
+.leaderboard__rank--top1 {
+    font-size: 2rem;
+}
+
+.leaderboard__rank--top2 {
+    font-size: 1.75rem;
+}
+
+.leaderboard__rank--top3 {
+    font-size: 1.75rem;
+}
+
+/* ============================================
+   PLAYER INFO
+   ============================================ */
+
+.leaderboard__player {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.leaderboard__player-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.leaderboard__player-date {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+/* ============================================
+   SCORE
+   ============================================ */
+
+.leaderboard__score {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #667eea;
+    text-align: center;
+}
+
+/* ============================================
+   DIFFICULTY BADGE
+   ============================================ */
+
+.leaderboard__difficulty {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.leaderboard__difficulty--easy {
+    background: #51cf66;
+    color: white;
+}
+
+.leaderboard__difficulty--medium {
+    background: #ffa94d;
+    color: white;
+}
+
+.leaderboard__difficulty--hard {
+    background: #ff6b6b;
+    color: white;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.leaderboard__empty {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.leaderboard__empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.leaderboard__empty-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 0.5rem 0;
+}
+
+.leaderboard__empty-subtext {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+}
+
+/* ============================================
+   SKELETON LOADING
+   ============================================ */
+
+.leaderboard__skeleton-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 100px 100px;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: #f5f7fa;
+    border-radius: 8px;
+}
+
+.leaderboard__skeleton-rank,
+.leaderboard__skeleton-name,
+.leaderboard__skeleton-score,
+.leaderboard__skeleton-difficulty {
+    height: 20px;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.leaderboard__skeleton-rank {
+    width: 40px;
+    margin: 0 auto;
+}
+
+.leaderboard__skeleton-score {
+    width: 60px;
+    margin: 0 auto;
+}
+
+.leaderboard__skeleton-difficulty {
+    width: 80px;
+    margin: 0 auto;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+[data-theme="dark"] .leaderboard__container {
+    background: #2a2a2a;
+}
+
+[data-theme="dark"] .leaderboard__title {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .leaderboard__row {
+    background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+}
+
+[data-theme="dark"] .leaderboard__player-name {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .leaderboard__player-date {
+    color: #999;
+}
+
+[data-theme="dark"] .leaderboard__rank {
+    color: #ccc;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 767px) {
+    .leaderboard__container {
+        padding: 1rem;
+    }
+
+    .leaderboard__title {
+        font-size: 1.5rem;
+    }
+
+    .leaderboard__row {
+        grid-template-columns: 50px 1fr 80px;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .leaderboard__difficulty {
+        grid-column: 2 / 4;
+        margin-top: 0.5rem;
+    }
+
+    .leaderboard__rank {
+        font-size: 1.25rem;
+    }
+
+    .leaderboard__player-name {
+        font-size: 1rem;
+    }
+
+    .leaderboard__score {
+        font-size: 1.25rem;
+    }
+
+    .leaderboard__skeleton-row {
+        grid-template-columns: 50px 1fr 80px;
+    }
+}
