@@ -7,10 +7,18 @@ import './styles/main.css';
 import { GameController } from './lib/game-controller';
 import { storageService } from './services/storage.service';
 import { leaderboardService } from './services/leaderboard.service';
-import type { GameConfig, Player, Difficulty, PokemonGeneration, Card } from './lib/type';
+import type { GameConfig, Player, Difficulty, PokemonGeneration } from './lib/type';
 
 // Import components (triggers custom element registration)
 import './components/index';
+import { PlayerSetup } from './components';
+import { DifficultySelector } from './components';
+import { ThemeSelector } from './components';
+import { GameBoard } from './components';
+import { ScoreDisplay } from './components';
+import { TimerDisplay } from './components';
+import { LeaderboardView } from './components';
+import { DarkModeToggle } from './components';
 
 /**
  * Main Application Class
@@ -20,18 +28,18 @@ class App {
     private gameController: GameController | null = null;
     private currentConfig: Partial<GameConfig> = {
         difficulty: 'medium' as Difficulty,
-        generation: 1 as PokemonGeneration,
+        theme: { generation: 1 as PokemonGeneration },
     };
 
     // DOM element references
-    private playerSetupModal!: HTMLElement;
-    private difficultySelectorModal!: HTMLElement;
-    private themeSelectorEl!: HTMLElement;
-    private gameBoardEl!: HTMLElement;
-    private scoreDisplayEl!: HTMLElement;
-    private timerDisplayEl!: HTMLElement;
-    private leaderboardViewEl!: HTMLElement;
-    private darkModeToggleEl!: HTMLElement;
+    private playerSetupModal!: PlayerSetup;
+    private difficultySelectorModal!: DifficultySelector;
+    private themeSelectorEl!: ThemeSelector;
+    private gameBoardEl!: GameBoard;
+    private scoreDisplayEl!: ScoreDisplay;
+    private timerDisplayEl!: TimerDisplay;
+    private leaderboardViewEl!: LeaderboardView;
+    private darkModeToggleEl!: DarkModeToggle;
     private gameContainer!: HTMLElement;
     private leaderboardContainer!: HTMLElement;
 
@@ -39,7 +47,7 @@ class App {
      * Initialize application
      */
     async init() {
-        console.log('<� Initializing Pokemon Memory Game...');
+        console.log('🎮 Initializing Pokemon Memory Game...');
 
         // 1. Setup DOM structure
         this.setupDOMStructure();
@@ -63,7 +71,7 @@ class App {
             this.startGameFlow();
         }
 
-        console.log(' Application initialized');
+        console.log('✅ Application initialized');
     }
 
     /**
@@ -75,22 +83,21 @@ class App {
             throw new Error('App root element not found');
         }
 
+        // Add the 'app' class to ensure responsive.css styles apply correctly
+        app.classList.add('app');
+
         app.innerHTML = `
-            <!-- Application Header -->
             <header class="app__header">
                 <div class="app__header-left">
-                    <h1 class="app__title"><� PokeMemo</h1>
+                    <h1 class="app__title">🎮 PokeMemo</h1>
                 </div>
                 <div class="app__header-right">
                     <dark-mode-toggle></dark-mode-toggle>
                 </div>
             </header>
 
-            <!-- Main Content Area -->
             <main class="app__main">
-                <!-- Game Container (hidden initially) -->
                 <div id="game-container" class="game-container game-container--with-sidebar" style="display: none;">
-                    <!-- Game Header -->
                     <div class="game-container__header">
                         <div class="game-container__controls">
                             <theme-selector></theme-selector>
@@ -100,48 +107,45 @@ class App {
                         </div>
                     </div>
 
-                    <!-- Game Board -->
                     <div class="game-container__board">
                         <game-board></game-board>
                     </div>
 
-                    <!-- Sidebar with Scores -->
                     <div class="game-container__sidebar">
                         <score-display></score-display>
                     </div>
                 </div>
 
-                <!-- Leaderboard Container (shown after game) -->
                 <div id="leaderboard-container" class="leaderboard-container" style="display: none;">
                     <div class="leaderboard-container__header">
-                        <h2><� Top Scores</h2>
+                        <h2>🏆 Top Scores</h2>
                         <button id="close-leaderboard-btn" class="btn btn--secondary">Close</button>
                     </div>
                     <leaderboard-view></leaderboard-view>
                 </div>
             </main>
 
-            <!-- Footer -->
             <footer class="app__footer">
-                <p>Built with d using TypeScript, Vite, and PokeAPI</p>
+                <p>Built with ❤️ using TypeScript, Vite, and PokeAPI</p>
             </footer>
 
-            <!-- Modals -->
             <player-setup id="player-setup-modal"></player-setup>
             <difficulty-selector id="difficulty-selector-modal"></difficulty-selector>
         `;
 
-        // Cache DOM references
-        this.playerSetupModal = document.querySelector('#player-setup-modal')!;
-        this.difficultySelectorModal = document.querySelector('#difficulty-selector-modal')!;
-        this.themeSelectorEl = document.querySelector('theme-selector')!;
-        this.gameBoardEl = document.querySelector('game-board')!;
-        this.scoreDisplayEl = document.querySelector('score-display')!;
-        this.timerDisplayEl = document.querySelector('timer-display')!;
-        this.leaderboardViewEl = document.querySelector('leaderboard-view')!;
-        this.darkModeToggleEl = document.querySelector('dark-mode-toggle')!;
-        this.gameContainer = document.querySelector('#game-container')!;
-        this.leaderboardContainer = document.querySelector('#leaderboard-container')!;
+        // Cache DOM references and cast to specific component types
+        this.playerSetupModal = document.querySelector('#player-setup-modal') as PlayerSetup;
+        this.difficultySelectorModal = document.querySelector('#difficulty-selector-modal') as DifficultySelector;
+        this.themeSelectorEl = document.querySelector('theme-selector') as ThemeSelector;
+        this.gameBoardEl = document.querySelector('game-board') as GameBoard;
+        this.scoreDisplayEl = document.querySelector('score-display') as ScoreDisplay;
+        this.timerDisplayEl = document.querySelector('timer-display') as TimerDisplay;
+        this.leaderboardViewEl = document.querySelector('leaderboard-view') as LeaderboardView;
+        this.darkModeToggleEl = document.querySelector('dark-mode-toggle') as DarkModeToggle;
+
+        // Standard HTML elements
+        this.gameContainer = document.querySelector('#game-container') as HTMLElement;
+        this.leaderboardContainer = document.querySelector('#leaderboard-container') as HTMLElement;
     }
 
     /**
@@ -149,7 +153,7 @@ class App {
      */
     private initializeDarkMode() {
         // Dark mode toggle handles this automatically via its constructor
-        console.log('< Dark mode initialized');
+        console.log('🌙 Dark mode initialized');
     }
 
     /**
@@ -158,12 +162,12 @@ class App {
     private setupErrorHandling() {
         window.addEventListener('error', (event) => {
             console.error('Global error:', event.error);
-            this.showErrorMessage('An unexpected error occurred. Please refresh the page.');
+            // this.showErrorMessage('An unexpected error occurred. Please refresh the page.');
         });
 
         window.addEventListener('unhandledrejection', (event) => {
             console.error('Unhandled promise rejection:', event.reason);
-            this.showErrorMessage('An unexpected error occurred. Please refresh the page.');
+            // this.showErrorMessage('An unexpected error occurred. Please refresh the page.');
         });
     }
 
@@ -216,9 +220,9 @@ class App {
      */
     private async checkForSavedGame(): Promise<any | null> {
         try {
-            const savedGame = await storageService.loadGame();
+            const savedGame = storageService.loadGame();
             if (savedGame && savedGame.state?.cards?.length > 0) {
-                console.log('=� Found saved game');
+                console.log('💾 Found saved game');
                 return savedGame;
             }
             return null;
@@ -239,7 +243,7 @@ class App {
         if (resume) {
             await this.resumeGame(savedGame);
         } else {
-            await storageService.clearGame();
+            storageService.clearGame();
             this.startGameFlow();
         }
     }
@@ -249,25 +253,19 @@ class App {
      */
     private async resumeGame(savedGame: any) {
         try {
-            console.log('� Resuming saved game');
+            console.log('▶️ Resuming saved game');
 
             // Extract saved configuration
             this.currentConfig = {
                 difficulty: savedGame.config.difficulty,
-                generation: savedGame.config.generation,
+                theme: savedGame.config.theme,
             };
 
             // Initialize game controller with saved state
-            this.gameController = new GameController({
-                ...savedGame.config,
-            });
+            this.gameController = new GameController();
 
             // Register game controller events
             this.registerGameControllerEvents();
-
-            // Restore game state
-            // Note: GameController would need a restoreState method for full restoration
-            // For now, we'll start a new game with the same config
 
             // Show game UI
             this.showGameUI();
@@ -278,7 +276,7 @@ class App {
         } catch (error) {
             console.error('Error resuming game:', error);
             this.showErrorMessage('Failed to resume game. Starting new game...');
-            await storageService.clearGame();
+            storageService.clearGame();
             this.startGameFlow();
         }
     }
@@ -287,8 +285,12 @@ class App {
      * Start the game flow (show player setup)
      */
     private startGameFlow() {
-        console.log('<� Starting game flow');
-        (this.playerSetupModal as any).open();
+        console.log('🎬 Starting game flow');
+        if (this.playerSetupModal && typeof this.playerSetupModal.open === 'function') {
+            this.playerSetupModal.open();
+        } else {
+            console.error('Player setup modal not ready');
+        }
     }
 
     /**
@@ -311,18 +313,20 @@ class App {
      * Handle players configured event
      */
     private onPlayersConfigured(players: Player[]) {
-        console.log('=e Players configured:', players);
+        console.log('👥 Players configured:', players);
         this.currentConfig.players = players;
 
         // Show difficulty selector
-        (this.difficultySelectorModal as any).open();
+        if (this.difficultySelectorModal && typeof this.difficultySelectorModal.open === 'function') {
+            this.difficultySelectorModal.open();
+        }
     }
 
     /**
      * Handle difficulty selected event
      */
     private async onDifficultySelected(difficulty: Difficulty) {
-        console.log('<� Difficulty selected:', difficulty);
+        console.log('🎯 Difficulty selected:', difficulty);
         this.currentConfig.difficulty = difficulty;
 
         // Initialize and start the game
@@ -333,8 +337,8 @@ class App {
      * Handle theme selected event
      */
     private onThemeSelected(generation: PokemonGeneration) {
-        console.log('<� Theme selected:', generation);
-        this.currentConfig.generation = generation;
+        console.log('🎨 Theme selected:', generation);
+        this.currentConfig.theme = { generation };
 
         // Restart game with new theme
         if (this.gameController) {
@@ -353,22 +357,23 @@ class App {
      */
     private async initializeGame(players: Player[]) {
         try {
-            console.log('<� Initializing game...');
+            console.log('🎮 Initializing game...');
 
             // Create game controller
-            const config: GameConfig = {
-                players,
-                difficulty: this.currentConfig.difficulty as Difficulty,
-                generation: this.currentConfig.generation as PokemonGeneration,
-            };
-
-            this.gameController = new GameController(config);
+            this.gameController = new GameController();
 
             // Register game controller events
             this.registerGameControllerEvents();
 
+            const config: GameConfig = {
+                players,
+                difficulty: this.currentConfig.difficulty as Difficulty,
+                theme: this.currentConfig.theme || { generation: 1 },
+            };
+
             // Initialize the game (fetches Pokemon, creates cards, shuffles)
-            await this.gameController.initGame();
+            await this.gameController.initGame(config);
+            this.gameController.startGame();
 
             // Show game UI
             this.showGameUI();
@@ -376,7 +381,7 @@ class App {
             // Update UI with initial state
             this.updateUI();
 
-            console.log(' Game initialized');
+            console.log('✅ Game initialized');
 
         } catch (error) {
             console.error('Error initializing game:', error);
@@ -399,19 +404,22 @@ class App {
         }) as EventListener);
 
         // Match found event
-        this.gameController.addEventListener('matchFound', ((event: CustomEvent) => {
-            const { cardIds, playerId } = event.detail;
-            this.onMatchFound(cardIds, playerId);
+        this.gameController.addEventListener('match', ((event: CustomEvent) => {
+            const { cards, player } = event.detail;
+            // Convert Card objects to IDs
+            const cardIds = [cards.first.id, cards.second.id];
+            this.onMatchFound(cardIds, player.id);
         }) as EventListener);
 
         // Mismatch event
         this.gameController.addEventListener('mismatch', ((event: CustomEvent) => {
-            const { cardIds } = event.detail;
+            const { cards } = event.detail;
+            const cardIds = [cards.first.id, cards.second.id];
             this.onMismatch(cardIds);
         }) as EventListener);
 
-        // Turn ended event
-        this.gameController.addEventListener('turnEnded', ((event: CustomEvent) => {
+        // Turn ended / switched event
+        this.gameController.addEventListener('turnSwitch', ((event: CustomEvent) => {
             this.onTurnEnded();
         }) as EventListener);
 
@@ -427,9 +435,11 @@ class App {
         }) as EventListener);
 
         // Game completed event
-        this.gameController.addEventListener('gameCompleted', ((event: CustomEvent) => {
-            const { winners, players } = event.detail;
-            this.onGameCompleted(winners, players);
+        this.gameController.addEventListener('gameOver', ((event: CustomEvent) => {
+            const { winner, finalScores } = event.detail;
+            // Handle single winner or array of winners (ties)
+            const winners = Array.isArray(winner) ? winner : (winner ? [winner] : []);
+            this.onGameCompleted(winners, finalScores);
         }) as EventListener);
     }
 
@@ -440,7 +450,7 @@ class App {
         if (!this.gameController) return;
 
         try {
-            await this.gameController.flipCard(cardId);
+            this.gameController.flipCard(cardId);
 
             // Save game state after every flip
             await this.saveGameState();
@@ -454,12 +464,12 @@ class App {
      * Handle card flipped event from controller
      */
     private onCardFlippedByController(cardId: number) {
-        const state = this.gameController?.getState();
+        const state = this.gameController?.getGameState();
         if (!state) return;
 
         const card = state.cards.find(c => c.id === cardId);
         if (card) {
-            (this.gameBoardEl as any).updateCard(cardId, { isFlipped: true });
+            this.gameBoardEl.updateCard(cardId, { isFlipped: true });
         }
     }
 
@@ -467,11 +477,11 @@ class App {
      * Handle match found
      */
     private onMatchFound(cardIds: number[], playerId: string) {
-        console.log(' Match found:', cardIds, 'by player:', playerId);
+        console.log('✅ Match found:', cardIds, 'by player:', playerId);
 
         // Update cards to matched state
         cardIds.forEach(cardId => {
-            (this.gameBoardEl as any).updateCard(cardId, { isMatched: true });
+            this.gameBoardEl.updateCard(cardId, { isMatched: true });
         });
 
         // Update score display
@@ -482,17 +492,20 @@ class App {
      * Handle mismatch
      */
     private onMismatch(cardIds: number[]) {
-        console.log('L Mismatch:', cardIds);
+        console.log('❌ Mismatch:', cardIds);
 
         // Add mismatch animation class
         cardIds.forEach(cardId => {
-            const cardElement = this.gameBoardEl.querySelector(`[data-card-id="${cardId}"]`);
-            cardElement?.classList.add('pokemon-card--mismatch');
-
-            // Remove class after animation
-            setTimeout(() => {
-                cardElement?.classList.remove('pokemon-card--mismatch');
-            }, 300);
+            const cardElement = this.gameBoardEl.querySelector(`pokemon-card[card-data*='"id":${cardId}']`);
+            if (cardElement) {
+                cardElement.classList.add('pokemon-card--mismatch');
+                setTimeout(() => {
+                    cardElement.classList.remove('pokemon-card--mismatch');
+                    // The controller handles flipping them back in state,
+                    // but we need to sync the visual state when that happens
+                    this.updateUI();
+                }, 1000);
+            }
         });
     }
 
@@ -500,15 +513,18 @@ class App {
      * Handle turn ended
      */
     private onTurnEnded() {
-        console.log('= Turn ended');
+        console.log('🔄 Turn ended');
 
         // Update UI to show next player
         this.updateScoreDisplay();
 
         // Show turn resume button if multiplayer
-        const state = this.gameController?.getState();
+        const state = this.gameController?.getGameState();
         if (state && state.players.length > 1) {
             this.showTurnResumePrompt();
+        } else if (state) {
+            // Single player, just resume
+            this.gameController?.resumeGame();
         }
     }
 
@@ -516,30 +532,31 @@ class App {
      * Show turn resume prompt for multiplayer
      */
     private showTurnResumePrompt() {
-        const state = this.gameController?.getState();
+        const state = this.gameController?.getGameState();
         if (!state) return;
 
         const currentPlayer = state.players[state.currentPlayerIndex];
 
-        alert(`${currentPlayer.name}'s turn. Click OK to continue.`);
+        // In a real app, use a custom modal. Using alert/confirm blocks execution which is handy here.
+        setTimeout(() => {
+            alert(`${currentPlayer.name}'s turn. Click OK to continue.`);
+            this.gameController?.resumeGame();
+        }, 100);
     }
 
     /**
      * Handle timer tick
      */
     private onTimerTick(timeRemaining: number) {
-        (this.timerDisplayEl as any).setTime(timeRemaining);
+        this.timerDisplayEl.updateTime(timeRemaining);
     }
 
     /**
      * Handle timer expired
      */
     private onTimerExpired() {
-        console.log('� Timer expired');
-
+        console.log('⏰ Timer expired');
         alert('Time expired! Turn automatically ended.');
-
-        // Controller already switched player, just update UI
         this.updateScoreDisplay();
     }
 
@@ -547,19 +564,19 @@ class App {
      * Handle game completed
      */
     private async onGameCompleted(winners: Player[], players: Player[]) {
-        console.log('<� Game completed!', winners);
+        console.log('🎉 Game completed!', winners);
 
         // Save final scores to leaderboard
         await this.saveScoresToLeaderboard(players);
 
         // Clear saved game
-        await storageService.clearGame();
+        storageService.clearGame();
 
         // Show completion message
         const winnerNames = winners.map(w => w.name).join(', ');
         const message = winners.length > 1
-            ? `<� Tie game! Winners: ${winnerNames}`
-            : `<� ${winnerNames} wins!`;
+            ? `🎉 Tie game! Winners: ${winnerNames}`
+            : `🎉 ${winnerNames} wins!`;
 
         alert(message);
 
@@ -576,15 +593,16 @@ class App {
 
             for (const player of players) {
                 await leaderboardService.submitScore({
+                    playerId: player.id,
                     playerName: player.name,
                     score: player.score,
                     difficulty,
-                    matches: player.matches,
-                    totalFlips: player.totalFlips,
+                    matches: player.matches || 0,
+                    totalFlips: player.totalFlips || 0,
                 });
             }
 
-            console.log('=� Scores saved to leaderboard');
+            console.log('💾 Scores saved to leaderboard');
         } catch (error) {
             console.error('Error saving scores:', error);
         }
@@ -597,14 +615,16 @@ class App {
         if (!this.gameController) return;
 
         try {
-            const state = this.gameController.getState();
+            const state = this.gameController.getGameState();
+            if (!state) return;
+
             const config = {
                 players: state.players,
                 difficulty: this.currentConfig.difficulty,
-                generation: this.currentConfig.generation,
+                theme: this.currentConfig.theme,
             };
 
-            await storageService.saveGame({ config, state });
+            storageService.saveGame({ config, state });
         } catch (error) {
             console.error('Error saving game state:', error);
         }
@@ -614,30 +634,32 @@ class App {
      * Update all UI components
      */
     private updateUI() {
-        const state = this.gameController?.getState();
+        const state = this.gameController?.getGameState();
         if (!state) return;
 
         // Update game board
-        (this.gameBoardEl as any).setCards(state.cards, this.currentConfig.difficulty);
+        this.gameBoardEl.updateCards(state.cards);
 
         // Update score display
         this.updateScoreDisplay();
 
         // Update timer
-        (this.timerDisplayEl as any).setTime(state.timeRemaining);
+        this.timerDisplayEl.updateTime(state.timeRemaining);
 
         // Update theme selector
-        (this.themeSelectorEl as any).setGeneration(this.currentConfig.generation);
+        if (this.currentConfig.theme?.generation) {
+            this.themeSelectorEl.setGeneration(this.currentConfig.theme.generation);
+        }
     }
 
     /**
      * Update score display
      */
     private updateScoreDisplay() {
-        const state = this.gameController?.getState();
+        const state = this.gameController?.getGameState();
         if (!state) return;
 
-        (this.scoreDisplayEl as any).updatePlayers(
+        this.scoreDisplayEl.updatePlayers(
             state.players,
             state.currentPlayerIndex
         );
@@ -663,26 +685,26 @@ class App {
      */
     private async showLeaderboard() {
         try {
-            console.log('<� Loading leaderboard...');
+            console.log('🏆 Loading leaderboard...');
 
             // Set loading state
-            (this.leaderboardViewEl as any).setLoading(true);
+            this.leaderboardViewEl.setLoading(true);
 
             // Hide game UI
             this.gameContainer.style.display = 'none';
             this.leaderboardContainer.style.display = 'block';
 
             // Fetch leaderboard data
-            const entries = await leaderboardService.getTopScores(10);
+            const entries = await leaderboardService.getLeaderboard();
 
             // Update leaderboard view
-            (this.leaderboardViewEl as any).setEntries(entries);
-            (this.leaderboardViewEl as any).setLoading(false);
+            this.leaderboardViewEl.updateEntries(entries);
+            this.leaderboardViewEl.setLoading(false);
 
         } catch (error) {
             console.error('Error loading leaderboard:', error);
             this.showErrorMessage('Failed to load leaderboard');
-            (this.leaderboardViewEl as any).setLoading(false);
+            this.leaderboardViewEl.setLoading(false);
         }
     }
 
@@ -704,7 +726,7 @@ class App {
      * Show error message to user
      */
     private showErrorMessage(message: string) {
-        alert(`L ${message}`);
+        alert(`❌ Error: ${message}`);
     }
 }
 

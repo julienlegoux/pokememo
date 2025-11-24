@@ -1,15 +1,14 @@
 import { pokemonService } from '../services/pokemon.service';
-import type {
-    GameConfig,
-    GameState,
-    Card,
-    Player,
-    TurnResult,
-    GameEventType,
-    GameEventDetail,
-    CardPair,
-    DIFFICULTY_CONFIG,
-    Difficulty,
+import {
+    type GameConfig,
+    type GameState,
+    type Card,
+    type Player,
+    type GameEventType,
+    type GameEventDetail,
+    type CardPair,
+    type DIFFICULTY_CONFIG,
+    type Difficulty, TurnResult,
 } from './type';
 import { DIFFICULTY_CONFIG as DiffConfig } from './type';
 

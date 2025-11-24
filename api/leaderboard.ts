@@ -9,12 +9,6 @@ const redis = new Redis({
 });
 
 // CORS headers
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-};
-
 /**
  * GET /api/leaderboard
  * Fetches the top 10 scores from Redis, sorted by score (highest first)

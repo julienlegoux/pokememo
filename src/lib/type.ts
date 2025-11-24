@@ -137,7 +137,7 @@ export type UpdatePlayerResponse = ApiResponse<{ id: string }>;
 export interface GameConfig {
     difficulty: Difficulty;
     players: Player[];             // 1-4 players
-    theme: PokemonTheme;           // Pokemon generation to use
+    theme: PokemonTheme;// Pokemon generation to use
 }
 
 // Pair of cards currently revealed (for comparison)

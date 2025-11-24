@@ -1,15 +1,15 @@
-import Pokedex from 'pokeapi-js-wrapper';
 import type { Pokemon, PokemonGeneration, CacheEntry } from '../lib/type';
 
 /**
  * Pokemon Service
  * Handles fetching Pokemon data from PokeAPI with caching
  * Supports Gen 1-3 only (Kanto, Johto, Hoenn)
+ * Uses direct fetch calls instead of wrapper library for better ES module compatibility
  */
 class PokemonService {
-    private pokedex: Pokedex;
     private cache: Map<string, CacheEntry<Pokemon[]>>;
     private readonly CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+    private readonly API_BASE_URL = 'https://pokeapi.co/api/v2';
     private readonly GEN_RANGES = {
         1: { start: 1, end: 151 },      // Kanto
         2: { start: 152, end: 251 },    // Johto
@@ -17,7 +17,6 @@ class PokemonService {
     };
 
     constructor() {
-        this.pokedex = new Pokedex();
         this.cache = new Map();
     }
 
@@ -40,12 +39,18 @@ class PokemonService {
      */
     async getPokemonById(id: number): Promise<Pokemon> {
         try {
-            const response = await this.pokedex.getPokemonByName(id);
+            const response = await fetch(`${this.API_BASE_URL}/pokemon/${id}`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
 
             return {
-                id: response.id,
-                name: response.name,
-                spriteUrl: response.sprites.front_default || '',
+                id: data.id,
+                name: data.name,
+                spriteUrl: data.sprites.front_default || '',
             };
         } catch (error) {
             console.error(`Failed to fetch Pokemon ID ${id}:`, error);
@@ -63,11 +68,11 @@ class PokemonService {
         // Check cache first
         const cachedEntry = this.cache.get(cacheKey);
         if (cachedEntry && this.isCacheValid(cachedEntry)) {
-            console.log(`Cache hit for ${cacheKey}`);
+            console.log(`✅ Cache hit for ${cacheKey}`);
             return cachedEntry.data;
         }
 
-        console.log(`Cache miss for ${cacheKey}, fetching from API...`);
+        console.log(`📡 Cache miss for ${cacheKey}, fetching from API...`);
 
         // Fetch from API
         const range = this.getGenerationRange(generation);
@@ -85,6 +90,8 @@ class PokemonService {
                 data: pokemon,
                 timestamp: Date.now(),
             });
+
+            console.log(`✅ Cached ${pokemon.length} Pokemon for ${cacheKey}`);
 
             return pokemon;
         } catch (error) {
@@ -146,7 +153,7 @@ class PokemonService {
      * Call this on app initialization for better performance
      */
     async preloadAllGenerations(): Promise<void> {
-        console.log('Preloading Pokemon generations 1-3...');
+        console.log('🔄 Preloading Pokemon generations 1-3...');
 
         try {
             await Promise.all([
@@ -155,9 +162,9 @@ class PokemonService {
                 this.getPokemonByGeneration(3),
             ]);
 
-            console.log('All generations preloaded and cached!');
+            console.log('✅ All generations preloaded and cached!');
         } catch (error) {
-            console.error('Failed to preload generations:', error);
+            console.error('❌ Failed to preload generations:', error);
         }
     }
 
@@ -166,7 +173,7 @@ class PokemonService {
      */
     clearCache(): void {
         this.cache.clear();
-        console.log('Pokemon cache cleared');
+        console.log('🗑️ Pokemon cache cleared');
     }
 
     /**

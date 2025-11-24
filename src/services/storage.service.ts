@@ -17,6 +17,7 @@ class StorageService {
         PLAYER_ID: 'pokememo_player_id',
         PLAYER_NAME: 'pokememo_player_name',
         PLAYER_PROFILE: 'pokememo_player_profile',
+        GAME_STATE: 'pokememo_game_state',
     };
 
     constructor() {
@@ -109,6 +110,42 @@ class StorageService {
     }
 
     /**
+     * Save game state to localStorage
+     */
+    saveGame(data: any): void {
+        try {
+            localStorage.setItem(this.STORAGE_KEYS.GAME_STATE, JSON.stringify(data));
+        } catch (error) {
+            console.error('LocalStorage error (saveGame):', error);
+            this.handleQuotaError(error);
+        }
+    }
+
+    /**
+     * Load game state from localStorage
+     */
+    loadGame(): any {
+        try {
+            const data = localStorage.getItem(this.STORAGE_KEYS.GAME_STATE);
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.error('LocalStorage error (loadGame):', error);
+            return null;
+        }
+    }
+
+    /**
+     * Clear saved game from localStorage
+     */
+    clearGame(): void {
+        try {
+            localStorage.removeItem(this.STORAGE_KEYS.GAME_STATE);
+        } catch (error) {
+            console.error('LocalStorage error (clearGame):', error);
+        }
+    }
+
+    /**
      * Clear all player data from localStorage
      */
     clearPlayer(): void {
@@ -116,6 +153,7 @@ class StorageService {
             localStorage.removeItem(this.STORAGE_KEYS.PLAYER_ID);
             localStorage.removeItem(this.STORAGE_KEYS.PLAYER_NAME);
             localStorage.removeItem(this.STORAGE_KEYS.PLAYER_PROFILE);
+            localStorage.removeItem(this.STORAGE_KEYS.GAME_STATE);
         } catch (error) {
             console.error('LocalStorage error (clearPlayer):', error);
         }
