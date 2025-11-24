@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(powershell -Command \"(Get-Content ''C:\\Users\\cdax31\\WebstormProjects\\pokememo\\src\\main.ts'').Count\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
