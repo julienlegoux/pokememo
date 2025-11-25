@@ -74,6 +74,14 @@ export class GameBoard extends HTMLElement {
     private handleCardFlip(event: Event) {
         const customEvent = event as CustomEvent;
 
+        // Ignore events that we dispatched ourselves to prevent infinite recursion
+        if (event.target === this) {
+            return;
+        }
+
+        // Stop the original event from propagating to prevent infinite loop
+        event.stopPropagation();
+
         // Re-emit event to parent (main.ts will listen)
         const bubbledEvent = new CustomEvent('cardflip', {
             detail: customEvent.detail,

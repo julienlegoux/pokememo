@@ -11,6 +11,7 @@
 .pokemon-card {
     position: relative;
     width: 100%;
+    min-width: 80px;
     aspect-ratio: 2/3;
     cursor: pointer;
     perspective: 1000px;
