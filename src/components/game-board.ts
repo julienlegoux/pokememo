@@ -7,10 +7,10 @@ import { PokemonCard } from './pokemon-card';
  * Renders cards and manages event bubbling to parent
  *
  * Usage:
- *   const board = document.createElement('game-board');
- *   board.setAttribute('cards-data', JSON.stringify(cardsArray));
- *   board.setAttribute('difficulty', 'medium');
- *   board.addEventListener('cardflip', (e) => console.log(e.detail.cardId));
+ * const board = document.createElement('game-board');
+ * board.setAttribute('cards-data', JSON.stringify(cardsArray));
+ * board.setAttribute('difficulty', 'medium');
+ * board.addEventListener('cardflip', (e) => console.log(e.detail.cardId));
  */
 export class GameBoard extends HTMLElement {
     private cards: Card[] = [];
@@ -69,6 +69,8 @@ export class GameBoard extends HTMLElement {
         // Create card elements
         this.cards.forEach((card) => {
             const cardElement = document.createElement('pokemon-card') as PokemonCard;
+            // Set ID on the element itself for faster lookups later
+            cardElement.dataset.cardId = card.id.toString();
             cardElement.setAttribute('card-data', JSON.stringify(card));
             cardElement.setAttribute('disabled', 'false');
             this.appendChild(cardElement);
@@ -105,6 +107,8 @@ export class GameBoard extends HTMLElement {
     private updateCardsInPlace() {
         const cardElements = this.querySelectorAll('pokemon-card');
 
+        // Since we render cards in order, we can rely on index matching
+        // provided the card count hasn't changed (which is checked in attributeChangedCallback)
         this.cards.forEach((card, index) => {
             const cardElement = cardElements[index] as PokemonCard;
             if (cardElement) {
@@ -133,16 +137,13 @@ export class GameBoard extends HTMLElement {
 
         Object.assign(card, updates);
 
-        // Find and update the specific card element
-        const cardElements = this.querySelectorAll('pokemon-card');
-        cardElements.forEach((element) => {
-            const cardElement = element as PokemonCard;
-            const cardData = JSON.parse(element.getAttribute('card-data') || '{}');
+        // Find the specific element using the dataset ID we added in render()
+        // This avoids JSON.parse on every card
+        const cardElement = this.querySelector(`pokemon-card[data-card-id="${cardId}"]`) as PokemonCard;
 
-            if (cardData.id === cardId) {
-                cardElement.setAttribute('card-data', JSON.stringify(card));
-            }
-        });
+        if (cardElement) {
+            cardElement.setAttribute('card-data', JSON.stringify(card));
+        }
     }
 }
 

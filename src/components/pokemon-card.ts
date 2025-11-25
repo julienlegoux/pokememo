@@ -5,15 +5,17 @@ import type { Card } from '../lib/type';
  * Represents a single memory card with flip animation
  *
  * Usage:
- *   const card = document.createElement('pokemon-card');
- *   card.setAttribute('card-data', JSON.stringify(cardObj));
- *   card.setAttribute('disabled', 'false');
- *   card.addEventListener('cardflip', (e) => console.log(e.detail.cardId));
+ * const card = document.createElement('pokemon-card');
+ * card.setAttribute('card-data', JSON.stringify(cardObj));
+ * card.setAttribute('disabled', 'false');
+ * card.addEventListener('cardflip', (e) => console.log(e.detail.cardId));
  */
 export class PokemonCard extends HTMLElement {
     private card: Card | null = null;
     private disabled: boolean = false;
     private listenerAttached: boolean = false;
+    // Track the currently rendered card ID to avoid unnecessary DOM rebuilding
+    private renderedCardId: number | null = null;
 
     // Observed attributes for reactivity
     static get observedAttributes() {
@@ -41,13 +43,14 @@ export class PokemonCard extends HTMLElement {
 
         if (name === 'disabled') {
             this.disabled = newValue === 'true';
-            this.render();
+            this.render(); // Re-render to update classes
         }
     }
 
     private render() {
         if (!this.card) {
             this.innerHTML = '';
+            this.renderedCardId = null;
             return;
         }
 
@@ -63,33 +66,39 @@ export class PokemonCard extends HTMLElement {
             isDisabled ? 'pokemon-card--disabled' : '',
         ].filter(Boolean).join(' ');
 
+        // Update the host class
         this.className = cardClass;
 
-        this.innerHTML = `
-            <div class="pokemon-card__inner">
-                <div class="pokemon-card__front">
-                    <img
-                        src="${this.card.image}"
-                        alt="Pokemon ${this.card.pokemonId}"
-                        class="pokemon-card__image"
-                        loading="lazy"
-                    />
-                </div>
-                <div class="pokemon-card__back">
-                    <div class="pokemon-card__pokeball">
-                        <!-- Pokeball SVG -->
-                        <svg viewBox="0 0 100 100" class="pokemon-card__pokeball-svg">
-                            <circle cx="50" cy="50" r="48" fill="#f2f2f2" stroke="#333" stroke-width="2"/>
-                            <circle cx="50" cy="50" r="12" fill="#333" stroke="#fff" stroke-width="3"/>
-                            <line x1="10" y1="50" x2="38" y2="50" stroke="#333" stroke-width="2"/>
-                            <line x1="62" y1="50" x2="90" y2="50" stroke="#333" stroke-width="2"/>
-                            <path d="M 10 50 A 40 40 0 0 1 90 50" fill="#e74c3c" stroke="#333" stroke-width="2"/>
-                            <path d="M 10 50 A 40 40 0 0 0 90 50" fill="#fff" stroke="#333" stroke-width="2"/>
-                        </svg>
+        // Only rebuild DOM if the card content (identity) has changed
+        // This preserves the .pokemon-card__inner element allowing CSS transitions to play
+        if (this.renderedCardId !== this.card.id) {
+            this.renderedCardId = this.card.id;
+
+            this.innerHTML = `
+                <div class="pokemon-card__inner">
+                    <div class="pokemon-card__front">
+                        <img
+                            src="${this.card.image}"
+                            alt="Pokemon ${this.card.pokemonId}"
+                            class="pokemon-card__image"
+                            loading="lazy"
+                        />
+                    </div>
+                    <div class="pokemon-card__back">
+                        <div class="pokemon-card__pokeball">
+                            <svg viewBox="0 0 100 100" class="pokemon-card__pokeball-svg">
+                                <circle cx="50" cy="50" r="48" fill="#f2f2f2" stroke="#333" stroke-width="2"/>
+                                <circle cx="50" cy="50" r="12" fill="#333" stroke="#fff" stroke-width="3"/>
+                                <line x1="10" y1="50" x2="38" y2="50" stroke="#333" stroke-width="2"/>
+                                <line x1="62" y1="50" x2="90" y2="50" stroke="#333" stroke-width="2"/>
+                                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="#e74c3c" stroke="#333" stroke-width="2"/>
+                                <path d="M 10 50 A 40 40 0 0 0 90 50" fill="#fff" stroke="#333" stroke-width="2"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
     }
 
     private attachEventListeners() {
