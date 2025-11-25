@@ -58,7 +58,7 @@ export class LeaderboardView extends HTMLElement {
     }
 
     private renderLoading(): string {
-        const skeletons = Array.from({ length: 5 }, (_, i) => `
+        const skeletons = Array.from({ length: 5 }, (_) => `
             <div class="leaderboard__skeleton-row">
                 <div class="leaderboard__skeleton-rank"></div>
                 <div class="leaderboard__skeleton-name"></div>

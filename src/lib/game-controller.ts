@@ -7,7 +7,6 @@ import {
     type GameEventType,
     type GameEventDetail,
     type CardPair,
-    type DIFFICULTY_CONFIG,
     type Difficulty, TurnResult,
 } from './type';
 import { DIFFICULTY_CONFIG as DiffConfig } from './type';

@@ -1,6 +1,6 @@
 /**
  * Main Application Entry Point
- * Bootstraps the Pokemon Memory Game application
+ * Bootstraps the Pokémon Memory Game application
  */
 
 import './styles/main.css';
@@ -10,7 +10,7 @@ import { leaderboardService } from './services/leaderboard.service';
 import type { GameConfig, Player, Difficulty, PokemonGeneration } from './lib/type';
 
 // Import components (triggers custom element registration)
-import './components/index';
+import './components/index.ts';
 import { PlayerSetup } from './components';
 import { DifficultySelector } from './components';
 import { ThemeSelector } from './components';
@@ -18,7 +18,6 @@ import { GameBoard } from './components';
 import { ScoreDisplay } from './components';
 import { TimerDisplay } from './components';
 import { LeaderboardView } from './components';
-import { DarkModeToggle } from './components';
 
 /**
  * Main Application Class
@@ -39,7 +38,6 @@ class App {
     private scoreDisplayEl!: ScoreDisplay;
     private timerDisplayEl!: TimerDisplay;
     private leaderboardViewEl!: LeaderboardView;
-    private darkModeToggleEl!: DarkModeToggle;
     private gameContainer!: HTMLElement;
     private leaderboardContainer!: HTMLElement;
 
@@ -141,7 +139,6 @@ class App {
         this.scoreDisplayEl = document.querySelector('score-display') as ScoreDisplay;
         this.timerDisplayEl = document.querySelector('timer-display') as TimerDisplay;
         this.leaderboardViewEl = document.querySelector('leaderboard-view') as LeaderboardView;
-        this.darkModeToggleEl = document.querySelector('dark-mode-toggle') as DarkModeToggle;
 
         // Standard HTML elements
         this.gameContainer = document.querySelector('#game-container') as HTMLElement;
@@ -419,7 +416,7 @@ class App {
         }) as EventListener);
 
         // Turn ended / switched event
-        this.gameController.addEventListener('turnSwitch', ((event: CustomEvent) => {
+        this.gameController.addEventListener('turnSwitch', (() => {
             this.onTurnEnded();
         }) as EventListener);
 
@@ -430,7 +427,7 @@ class App {
         }) as EventListener);
 
         // Timer expired event
-        this.gameController.addEventListener('timerExpired', ((event: CustomEvent) => {
+        this.gameController.addEventListener('timerExpired', (() => {
             this.onTimerExpired();
         }) as EventListener);
 

@@ -3,8 +3,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type {
     PlayerProfile,
     UpdatePlayerRequest,
-    PlayerProfileResponse,
-    UpdatePlayerResponse,
     PokemonGeneration,
 } from '../../src/lib/type';
 
