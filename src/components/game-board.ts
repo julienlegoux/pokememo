@@ -1,17 +1,6 @@
 import type { Card, Difficulty } from '../lib/type';
 import { PokemonCard } from './pokemon-card';
 
-/**
- * GameBoard Web Component
- * Grid container for memory cards with responsive layout
- * Renders cards and manages event bubbling to parent
- *
- * Usage:
- * const board = document.createElement('game-board');
- * board.setAttribute('cards-data', JSON.stringify(cardsArray));
- * board.setAttribute('difficulty', 'medium');
- * board.addEventListener('cardflip', (e) => console.log(e.detail.cardId));
- */
 export class GameBoard extends HTMLElement {
     private cards: Card[] = [];
     private difficulty: Difficulty = 'medium' as Difficulty;
@@ -33,13 +22,12 @@ export class GameBoard extends HTMLElement {
         if (name === 'cards-data' && newValue) {
             try {
                 const newCards = JSON.parse(newValue);
-
-                // If number of cards changed, do full re-render
+                // Full re-render only if card count changes (new game)
                 if (newCards.length !== this.cards.length) {
                     this.cards = newCards;
                     this.render();
                 } else {
-                    // Update existing cards in place
+                    // Otherwise just update data
                     this.cards = newCards;
                     this.updateCardsInPlace();
                 }
@@ -55,22 +43,18 @@ export class GameBoard extends HTMLElement {
     }
 
     private render() {
-        // Apply BEM class for difficulty-specific grid
         const boardClass = [
             'game-board',
             `game-board--${this.difficulty}`,
         ].join(' ');
 
         this.className = boardClass;
-
-        // Clear existing cards
         this.innerHTML = '';
 
-        // Create card elements
         this.cards.forEach((card) => {
             const cardElement = document.createElement('pokemon-card') as PokemonCard;
-            // Set ID on the element itself for faster lookups later
-            cardElement.dataset.cardId = card.id.toString();
+            // IMPORTANT: Set data-id for fast lookup
+            cardElement.dataset.id = card.id.toString();
             cardElement.setAttribute('card-data', JSON.stringify(card));
             cardElement.setAttribute('disabled', 'false');
             this.appendChild(cardElement);
@@ -78,76 +62,61 @@ export class GameBoard extends HTMLElement {
     }
 
     private attachEventListeners() {
-        // Listen for card flip events from children and bubble them up
         this.addEventListener('cardflip', this.handleCardFlip.bind(this));
     }
 
     private handleCardFlip(event: Event) {
         const customEvent = event as CustomEvent;
-
-        // Ignore events that we dispatched ourselves to prevent infinite recursion
-        if (event.target === this) {
-            return;
-        }
-
-        // Stop the original event from propagating to prevent infinite loop
+        if (event.target === this) return;
         event.stopPropagation();
 
-        // Re-emit event to parent (main.ts will listen)
         const bubbledEvent = new CustomEvent('cardflip', {
             detail: customEvent.detail,
             bubbles: true,
             composed: true,
         });
-
         this.dispatchEvent(bubbledEvent);
     }
 
-    // Private method to update all cards in place without re-rendering
     private updateCardsInPlace() {
         const cardElements = this.querySelectorAll('pokemon-card');
-
-        // Since we render cards in order, we can rely on index matching
-        // provided the card count hasn't changed (which is checked in attributeChangedCallback)
         this.cards.forEach((card, index) => {
             const cardElement = cardElements[index] as PokemonCard;
             if (cardElement) {
-                cardElement.setAttribute('card-data', JSON.stringify(card));
+                // Only update if state actually changed to avoid DOM thrashing
+                const currentData = cardElement.getAttribute('card-data');
+                const newData = JSON.stringify(card);
+                if (currentData !== newData) {
+                    cardElement.setAttribute('card-data', newData);
+                }
             }
         });
     }
 
-    // Public method to update cards
     public updateCards(cards: Card[]) {
-        // If number of cards changed, do full re-render (e.g., new game)
         if (cards.length !== this.cards.length) {
             this.cards = cards;
             this.render();
         } else {
-            // Update existing cards in place to preserve event listeners
             this.cards = cards;
             this.updateCardsInPlace();
         }
     }
 
-    // Public method to update single card state
     public updateCard(cardId: number, updates: Partial<Card>) {
         const card = this.cards.find(c => c.id === cardId);
         if (!card) return;
 
         Object.assign(card, updates);
 
-        // Find the specific element using the dataset ID we added in render()
-        // This avoids JSON.parse on every card
-        const cardElement = this.querySelector(`pokemon-card[data-card-id="${cardId}"]`) as PokemonCard;
-
+        // FAST UPDATE: Use dataset lookup instead of parsing JSON
+        const cardElement = this.querySelector(`pokemon-card[data-id="${cardId}"]`);
         if (cardElement) {
             cardElement.setAttribute('card-data', JSON.stringify(card));
         }
     }
 }
 
-// Register custom element
 if (!customElements.get('game-board')) {
     customElements.define('game-board', GameBoard);
 }

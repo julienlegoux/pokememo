@@ -447,10 +447,9 @@ class App {
         if (!this.gameController) return;
 
         try {
+            // 1. Immediately update UI state logic
             this.gameController.flipCard(cardId);
 
-            // Save game state after every flip
-            await this.saveGameState();
 
         } catch (error) {
             console.error('Error flipping card:', error);
@@ -475,14 +474,13 @@ class App {
      */
     private onMatchFound(cardIds: number[], playerId: string) {
         console.log('✅ Match found:', cardIds, 'by player:', playerId);
-
-        // Update cards to matched state
         cardIds.forEach(cardId => {
             this.gameBoardEl.updateCard(cardId, { isMatched: true });
         });
-
-        // Update score display
         this.updateScoreDisplay();
+
+        // Save state here (safe point)
+        this.saveGameState();
     }
 
     /**
@@ -511,16 +509,15 @@ class App {
      */
     private onTurnEnded() {
         console.log('🔄 Turn ended');
-
-        // Update UI to show next player
         this.updateScoreDisplay();
 
-        // Show turn resume button if multiplayer
+        // Save state here (safe point)
+        this.saveGameState();
+
         const state = this.gameController?.getGameState();
         if (state && state.players.length > 1) {
             this.showTurnResumePrompt();
         } else if (state) {
-            // Single player, just resume
             this.gameController?.resumeGame();
         }
     }

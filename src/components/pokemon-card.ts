@@ -1,23 +1,11 @@
 import type { Card } from '../lib/type';
 
-/**
- * PokemonCard Web Component
- * Represents a single memory card with flip animation
- *
- * Usage:
- * const card = document.createElement('pokemon-card');
- * card.setAttribute('card-data', JSON.stringify(cardObj));
- * card.setAttribute('disabled', 'false');
- * card.addEventListener('cardflip', (e) => console.log(e.detail.cardId));
- */
 export class PokemonCard extends HTMLElement {
     private card: Card | null = null;
     private disabled: boolean = false;
     private listenerAttached: boolean = false;
-    // Track the currently rendered card ID to avoid unnecessary DOM rebuilding
-    private renderedCardId: number | null = null;
+    private renderedCardId: number | null = null; // Track rendered ID
 
-    // Observed attributes for reactivity
     static get observedAttributes() {
         return ['card-data', 'disabled'];
     }
@@ -43,7 +31,7 @@ export class PokemonCard extends HTMLElement {
 
         if (name === 'disabled') {
             this.disabled = newValue === 'true';
-            this.render(); // Re-render to update classes
+            this.render();
         }
     }
 
@@ -58,19 +46,18 @@ export class PokemonCard extends HTMLElement {
         const isMatched = this.card.isMatched;
         const isDisabled = this.disabled || isMatched;
 
-        // BEM class names
-        const cardClass = [
-            'pokemon-card',
-            isFlipped ? 'pokemon-card--flipped' : '',
-            isMatched ? 'pokemon-card--matched' : '',
-            isDisabled ? 'pokemon-card--disabled' : '',
-        ].filter(Boolean).join(' ');
+        // Apply classes for animation (this triggers the CSS transition)
+        this.classList.toggle('pokemon-card--flipped', !!isFlipped);
+        this.classList.toggle('pokemon-card--matched', !!isMatched);
+        this.classList.toggle('pokemon-card--disabled', !!isDisabled);
 
-        // Update the host class
-        this.className = cardClass;
+        // Ensure base class exists
+        if (!this.classList.contains('pokemon-card')) {
+            this.classList.add('pokemon-card');
+        }
 
-        // Only rebuild DOM if the card content (identity) has changed
-        // This preserves the .pokemon-card__inner element allowing CSS transitions to play
+        // Only rebuild DOM if the card identity matches changed (e.g. new game)
+        // This PRESERVES the .pokemon-card__inner element during flips
         if (this.renderedCardId !== this.card.id) {
             this.renderedCardId = this.card.id;
 
@@ -102,7 +89,6 @@ export class PokemonCard extends HTMLElement {
     }
 
     private attachEventListeners() {
-        // Only attach listener once to prevent duplicates
         if (!this.listenerAttached) {
             this.addEventListener('click', this.handleClick.bind(this));
             this.listenerAttached = true;
@@ -114,24 +100,16 @@ export class PokemonCard extends HTMLElement {
             return;
         }
 
-        // Emit custom event with card ID
         const event = new CustomEvent('cardflip', {
             detail: { cardId: this.card.id },
             bubbles: true,
-            composed: true, // Allows event to pass through shadow DOM boundaries if needed
+            composed: true,
         });
 
         this.dispatchEvent(event);
     }
-
-    // Public method to update card state
-    public updateCard(card: Card) {
-        this.card = card;
-        this.render();
-    }
 }
 
-// Register custom element
 if (!customElements.get('pokemon-card')) {
     customElements.define('pokemon-card', PokemonCard);
 }
