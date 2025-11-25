@@ -244,6 +244,10 @@ export class GameController extends EventTarget {
         const [first, second] = this.state.revealedCards;
         const currentPlayer = this.getCurrentPlayer();
 
+        // Clear revealed cards immediately to allow new flips
+        // (we saved references to first/second above)
+        this.state.revealedCards = [];
+
         // Pause game during comparison
         this.pauseTimer();
 
@@ -264,9 +268,6 @@ export class GameController extends EventTarget {
 
                 this.emitEvent('match', { cards: pair, player: currentPlayer });
 
-                // Reset revealed cards
-                this.state.revealedCards = [];
-
                 // Player continues turn - reset timer
                 this.resetTimer();
                 this.resumeTimer();
@@ -281,9 +282,6 @@ export class GameController extends EventTarget {
                 second.isFlipped = false;
 
                 this.emitEvent('mismatch', { cards: pair, player: currentPlayer });
-
-                // Reset revealed cards
-                this.state.revealedCards = [];
 
                 // Switch to next player
                 this.switchPlayer();

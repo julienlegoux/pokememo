@@ -13,6 +13,7 @@ import type { Card } from '../lib/type';
 export class PokemonCard extends HTMLElement {
     private card: Card | null = null;
     private disabled: boolean = false;
+    private listenerAttached: boolean = false;
 
     // Observed attributes for reactivity
     static get observedAttributes() {
@@ -92,7 +93,11 @@ export class PokemonCard extends HTMLElement {
     }
 
     private attachEventListeners() {
-        this.addEventListener('click', this.handleClick.bind(this));
+        // Only attach listener once to prevent duplicates
+        if (!this.listenerAttached) {
+            this.addEventListener('click', this.handleClick.bind(this));
+            this.listenerAttached = true;
+        }
     }
 
     private handleClick() {

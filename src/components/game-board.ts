@@ -32,8 +32,17 @@ export class GameBoard extends HTMLElement {
     attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
         if (name === 'cards-data' && newValue) {
             try {
-                this.cards = JSON.parse(newValue);
-                this.render();
+                const newCards = JSON.parse(newValue);
+
+                // If number of cards changed, do full re-render
+                if (newCards.length !== this.cards.length) {
+                    this.cards = newCards;
+                    this.render();
+                } else {
+                    // Update existing cards in place
+                    this.cards = newCards;
+                    this.updateCardsInPlace();
+                }
             } catch (e) {
                 console.error('Invalid cards data:', e);
             }
@@ -92,10 +101,29 @@ export class GameBoard extends HTMLElement {
         this.dispatchEvent(bubbledEvent);
     }
 
+    // Private method to update all cards in place without re-rendering
+    private updateCardsInPlace() {
+        const cardElements = this.querySelectorAll('pokemon-card');
+
+        this.cards.forEach((card, index) => {
+            const cardElement = cardElements[index] as PokemonCard;
+            if (cardElement) {
+                cardElement.setAttribute('card-data', JSON.stringify(card));
+            }
+        });
+    }
+
     // Public method to update cards
     public updateCards(cards: Card[]) {
-        this.cards = cards;
-        this.render();
+        // If number of cards changed, do full re-render (e.g., new game)
+        if (cards.length !== this.cards.length) {
+            this.cards = cards;
+            this.render();
+        } else {
+            // Update existing cards in place to preserve event listeners
+            this.cards = cards;
+            this.updateCardsInPlace();
+        }
     }
 
     // Public method to update single card state
